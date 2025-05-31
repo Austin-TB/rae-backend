@@ -11,7 +11,12 @@ import uvicorn
 app = FastAPI(title="Rae Chat API", version="1.0.0")
 
 # Add CORS middleware
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3001,https://rae-frontend.vercel.app").split(",")
+allowed_origins=[
+    "http://localhost:5173",
+    "http://localhost:3001",
+    "https://rae-frontend.vercel.app",
+    "https://chatwithrae.vercel.app"
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -67,6 +72,11 @@ def convert_to_langchain_messages(history: List[ChatMessage]) -> List[BaseMessag
 @app.get("/")
 async def root():
     return {"message": "Rae Chat API is running!"}
+
+@app.options("/chat")
+async def chat_options():
+    """Handle OPTIONS requests for CORS preflight"""
+    return {"message": "OK"}
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
