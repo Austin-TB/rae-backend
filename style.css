@@ -1,0 +1,18 @@
+/* General app container styling */
+.gradio-container {
+    font-family: sans-serif;
+    background-color: #fdffd6 !important; /* Light beige/gray background */
+    color: #ffffff; /* Dark text color */
+}
+#chatbot-container {
+    border-radius: 5rem;
+    border: none
+}
+
+#chatbot-container *{
+    margin: auto;
+    color: #000000 !important;
+    border-radius: 5rem;
+    /* padding: 10px; */
+    background-color: #ffffff !important;
+}
