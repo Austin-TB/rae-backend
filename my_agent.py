@@ -81,7 +81,7 @@ def web_search(query: str) -> str:
         [
             f'{doc["title"]}\n{doc["url"]}\n{doc["content"]}\n-----------\n'
             for doc in search_docs
-        ]
+        ]   
     )
     return formatted_search_docs
 
@@ -213,7 +213,10 @@ def scrape_youtube(url: str) -> str:
     """
     loader = YoutubeLoader.from_youtube_url(url, add_video_info=False)
     docs = loader.load()
-    return docs[0].page_content
+    if len(docs[0].page_content) > 10000:
+        return docs[0].page_content[:10000]
+    else:
+        return docs[0].page_content
 
 @tool
 def retriever_tool(query: str) -> Dict[str, Any]:
@@ -251,11 +254,9 @@ tools =[
     retriever_tool
 ]
 
-def build_agent(provider: str = "google"):
-    if provider == "qwen":
+def build_agent(provider: str = "groq"):
+    if provider == "groq":
         llm = ChatGroq(model="qwen-qwq-32b", temperature=0)
-    elif provider == "llama":
-        llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
     elif provider == "google":
         llm = ChatGoogleGenerativeAI(
                 model="gemini-2.0-flash",
