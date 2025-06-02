@@ -254,7 +254,7 @@ tools =[
     retriever_tool
 ]
 
-def build_agent(provider: str = "groq"):
+def build_agent(provider: str = "google"):
     if provider == "groq":
         llm = ChatGroq(model="qwen-qwq-32b", temperature=0)
     elif provider == "google":
