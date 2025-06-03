@@ -41,16 +41,6 @@ def calculator(q:str) -> str:
     if a >= 0:
         return a**0.5
     return cmath.sqrt(a)
-##-----------------------------------------------------------------------------------------##
-
-@tool
-def reverse_string(string: str) -> str:
-    """
-    Reverse a string.
-    Args:
-        string (str): The string to reverse.
-    """
-    return string[::-1]
 
 ##-----------------------------------------------------------------------------------------##
 
@@ -106,6 +96,8 @@ def arxiv_search(query: str) -> str:
     )
     return formatted_wiki_docs_summaries
 
+##-----------------------------------------------------------------------------------------##
+
 @tool(description="A tool to extract text from an image using OCR library pytesseract.")
 def extract_text_from_image(image_path: str) -> str:
     """
@@ -123,6 +115,8 @@ def extract_text_from_image(image_path: str) -> str:
         return f"Extracted text from image:\n\n{text}"
     except Exception as e:
         return f"Error extracting text from image: {str(e)}"
+
+##-----------------------------------------------------------------------------------------##
 
 @tool(description="A tool to analyze a CSV file using pandas and answer a question about it.")
 def analyze_csv_file(file_path: str, query: str) -> str:
@@ -176,6 +170,8 @@ def analyze_excel_file(file_path: str, query: str) -> str:
     except Exception as e:
         return f"Error analyzing Excel file: {str(e)}"
 
+##-----------------------------------------------------------------------------------------##
+
 @tool
 def execute_python_script(file_path: str) -> str:
     """
@@ -218,6 +214,8 @@ def scrape_youtube(url: str) -> str:
     else:
         return docs[0].page_content
 
+##-----------------------------------------------------------------------------------------##
+
 @tool
 def retriever_tool(query: str) -> Dict[str, Any]:
     """
@@ -248,13 +246,12 @@ tools =[
     analyze_csv_file,
     analyze_excel_file,
     execute_python_script,
-    reverse_string,
     scrape_website,
     scrape_youtube,
     retriever_tool
 ]
 
-def build_agent(provider: str = "google"):
+def build_agent(provider: str = "groq"):
     if provider == "groq":
         llm = ChatGroq(model="qwen-qwq-32b", temperature=0)
     elif provider == "google":
