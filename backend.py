@@ -1,9 +1,10 @@
 """FastAPI Backend for Rae Chatbot"""
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, parse_obj_as
 from typing import List, Dict, Any
+import json
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from my_agent import build_agent
 import uvicorn
@@ -78,15 +79,45 @@ async def chat_options():
     """Handle OPTIONS requests for CORS preflight"""
     return {"message": "OK"}
 
+UPLOAD_DIR = "uploads"
+
 @app.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+async def chat(
+    message: str = Form(...),
+    conversation_history_str: str = Form("[]"),
+    file: UploadFile = File(None)
+):
     try:
-        langchain_history = convert_to_langchain_messages(request.conversation_history)
-        langchain_history.append(HumanMessage(content=request.message))
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+        user_message_content = message
+        file_path_message = ""
+
+        if file:
+            filename = os.path.basename(file.filename)
+            file_path = os.path.join(UPLOAD_DIR, filename)
+            with open(file_path, "wb") as buffer:
+                buffer.write(await file.read())
+            print(f"File saved to: {file_path}")
+            file_path_message = f"\\nfile_path:{file_path}"
+
+        full_user_message = f"{user_message_content}{file_path_message}"
+
+        try:
+            parsed_history_data = json.loads(conversation_history_str)
+            conversation_history: List[ChatMessage] = parse_obj_as(List[ChatMessage], parsed_history_data)
+        except json.JSONDecodeError:
+            print("Error decoding conversation_history_str JSON.")
+            conversation_history = []
+        except Exception as e:
+            print(f"Error parsing conversation_history: {e}")
+            conversation_history = []
+
+        langchain_history = convert_to_langchain_messages(conversation_history)
+        langchain_history.append(HumanMessage(content=full_user_message))
         response_content = agent(langchain_history)
 
         return ChatResponse(response=response_content)
-        # return ChatResponse(response="Henlo")
         
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
