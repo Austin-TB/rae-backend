@@ -8,6 +8,7 @@ import json
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from my_agent import build_agent
 import uvicorn
+import shutil
 
 app = FastAPI(title="Rae Chat API", version="1.0.0")
 
@@ -79,7 +80,7 @@ async def chat_options():
     """Handle OPTIONS requests for CORS preflight"""
     return {"message": "OK"}
 
-UPLOAD_DIR = "uploads"
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(
@@ -88,8 +89,6 @@ async def chat(
     file: UploadFile = File(None)
 ):
     try:
-        os.makedirs(UPLOAD_DIR, exist_ok=True)
-
         user_message_content = message
         file_path_message = ""
 
@@ -129,6 +128,13 @@ async def health_check():
 
 if __name__ == "__main__":
     print("\n" + "-"*30 + "Rae Backend" + "-"*30)
+
+    # Create or clear the upload directory
+    if os.path.exists(UPLOAD_DIR):
+        shutil.rmtree(UPLOAD_DIR)
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    print(f"Upload directory '{UPLOAD_DIR}' ensured to be clean and exists.")
+
     server_host = os.getenv("BACKEND_HOST", "0.0.0.0")
     server_port = int(os.getenv("BACKEND_PORT", "8000"))
     uvicorn.run(app, host=server_host, port=server_port, log_level="info") 
