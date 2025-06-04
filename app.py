@@ -33,7 +33,7 @@ def agent_response(current_user_message: str, _):
     yield response_content
     # yield "Hello"
 
-with gr.Blocks(css_paths="./style.css") as demo:
+with gr.Blocks() as demo:
     gr.ChatInterface(
         agent_response,
         chatbot=gr.Chatbot(height=600, type='messages', elem_id="chatbot-container"),

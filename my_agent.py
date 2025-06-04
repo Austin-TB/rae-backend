@@ -277,9 +277,11 @@ def build_agent(provider: str = "groq"):
         
         # Prepare messages for the LLM: System Prompt + current history
         messages_for_llm_invocation = [sys_msg] + state["messages"]
+        print(f"[ASSISTANT_NODE] About to invoke LLM with {len(messages_for_llm_invocation)} messages. First user message: {messages_for_llm_invocation[-1].content if messages_for_llm_invocation else 'No messages'}") # DEBUG
         
         # Invoke LLM with the system prompt and current history
         ai_response_message = llm_with_tools.invoke(messages_for_llm_invocation)
+        print("[ASSISTANT_NODE] LLM invocation complete.") # DEBUG
         
         # Return only the new AI message to be appended to the state
         return {"messages": [ai_response_message]}
