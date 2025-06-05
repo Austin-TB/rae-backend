@@ -5,7 +5,6 @@ uvicorn[standard]
 requests
 langgraph
 langchain_community
-duckduckgo-search
 tavily-python
 langchain_tavily
 langchain_google_genai
@@ -13,13 +12,10 @@ wikipedia
 wikipedia-api
 langchain_groq
 pytesseract
-numpy
 pandas
-matplotlib
 pillow
 openpyxl
 arxiv
-playwright
 lxml
 beautifulsoup4
 youtube-transcript-api

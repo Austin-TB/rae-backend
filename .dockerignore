@@ -1,0 +1,14 @@
+.git
+.gitignore
+
+__pycache__/
+
+.env
+
+.DS_Store
+Thumbs.db
+
+Dockerfile
+.dockerignore
+
+uploads/

@@ -12,6 +12,16 @@ import shutil
 
 app = FastAPI(title="Rae Chat API", version="1.0.0")
 
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+
+@app.on_event("startup")
+async def startup_event():
+    """Ensure the upload directory is clean and exists when the application starts."""
+    if os.path.exists(UPLOAD_DIR):
+        shutil.rmtree(UPLOAD_DIR)  # Clears the directory on startup
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    print(f"Upload directory '{UPLOAD_DIR}' ensured to be clean and exists.")
+
 # Add CORS middleware
 allowed_origins=[
     "http://localhost:5173",
@@ -80,8 +90,6 @@ async def chat_options():
     """Handle OPTIONS requests for CORS preflight"""
     return {"message": "OK"}
 
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
-
 @app.post("/chat", response_model=ChatResponse)
 async def chat(
     message: str = Form(...),
@@ -129,11 +137,10 @@ async def health_check():
 if __name__ == "__main__":
     print("\n" + "-"*30 + "Rae Backend" + "-"*30)
 
-    # Create or clear the upload directory
-    if os.path.exists(UPLOAD_DIR):
-        shutil.rmtree(UPLOAD_DIR)
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
-    print(f"Upload directory '{UPLOAD_DIR}' ensured to be clean and exists.")
+    # if os.path.exists(UPLOAD_DIR):
+    #     shutil.rmtree(UPLOAD_DIR)
+    # os.makedirs(UPLOAD_DIR, exist_ok=True)
+    # print(f"Upload directory '{UPLOAD_DIR}' ensured to be clean and exists.")
 
     server_host = os.getenv("BACKEND_HOST", "0.0.0.0")
     server_port = int(os.getenv("BACKEND_PORT", "8000"))

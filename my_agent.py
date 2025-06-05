@@ -1,7 +1,6 @@
 import os
 from typing import Dict, Any
 import cmath
-import numpy as np
 from dotenv import load_dotenv 
 from langchain_groq import ChatGroq
 from langgraph.graph import START, StateGraph, MessagesState
@@ -18,8 +17,13 @@ import pandas as pd
 import pytesseract
 from python_interpreter import run_python_script
 from PIL import Image
+import os
 
-load_dotenv(override=True)
+# load_dotenv(override=True)
+
+GROQ_API_KEY= os.getenv("GROQ_API_KEY", "")
+GOOGLE_API_KEY= os.getenv("GOOGLE_API_KEY", "")
+
 
 @tool
 def calculator(q:str) -> str:
