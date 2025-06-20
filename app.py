@@ -27,7 +27,8 @@ allowed_origins=[
     "http://localhost:5173",
     "http://localhost:3001",
     "https://rae-frontend.vercel.app",
-    "https://chatwithrae.vercel.app"
+    "https://chatwithrae.vercel.app",
+    "https://rae.austintbabu.com"
 ]
 
 app.add_middleware(
