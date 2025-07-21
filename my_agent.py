@@ -257,7 +257,7 @@ tools =[
 
 def build_agent(provider: str = "groq"):
     if provider == "groq":
-        llm = ChatGroq(model="qwen-qwq-32b", temperature=0)
+        llm = ChatGroq(model="qwen/qwen3-32b", temperature=0)
     elif provider == "google":
         llm = ChatGoogleGenerativeAI(
                 model="gemini-2.0-flash",
